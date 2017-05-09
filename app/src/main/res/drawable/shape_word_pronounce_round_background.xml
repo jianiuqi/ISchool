@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+	<!-- 背景色 -->
+    <solid android:color="@android:color/white" />
+
+    <!-- 边框颜色 -->
+    
+    <!-- padding用不上 -->
+    <padding
+        android:bottom="0dip"
+        android:left="0dip"
+        android:right="0dip"
+        android:top="0dip" />
+
+    <corners
+        android:bottomLeftRadius="15dip"
+        android:bottomRightRadius="15dip"
+        android:topLeftRadius="15dip"
+        android:topRightRadius="15dip" />
+
+</shape>

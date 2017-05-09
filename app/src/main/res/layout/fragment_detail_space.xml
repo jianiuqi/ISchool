@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:ignore="RtlHardcoded,ContentDescription" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/shape_lesson_sentence_round_background"
+        android:padding="20dp" >
+
+        <ImageView
+            android:id="@+id/icon_level_iv"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/icon_level_1" />
+
+        <TextView
+            android:id="@+id/lesson_sentence"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="80dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/lesson_detail_demo"
+            android:textColor="@android:color/black"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/lesson_sentence_translation"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/lesson_sentence"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/lesson_detail_demo_translation"
+            android:textColor="#84898B"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp" >
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/lesson_score_bg" />
+
+        <com.ibm.ischool.ui.view.RiseNumberTextView
+            android:id="@+id/score_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="0"
+            android:textColor="@android:color/white"
+            android:textSize="26sp" />
+
+        <ImageView
+            android:id="@+id/score_star_1"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginRight="-7dp"
+            android:layout_marginTop="5dp"
+            android:layout_toLeftOf="@+id/score_star_2"
+            android:src="@drawable/icon_star_grey" />
+
+        <ImageView
+            android:id="@+id/score_star_3"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="-7dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/score_star_2"
+            android:src="@drawable/icon_star_grey" />
+
+        <ImageView
+            android:id="@+id/score_star_2"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/icon_star_grey" />
+    </RelativeLayout>
+
+</RelativeLayout>

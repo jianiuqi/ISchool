@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ISchool</string>
+    <string name="splash_text">IBM Research - China</string>
+    <string name="main_lesson_titlebar_text">我的课程</string>
+    <string name="main_personal_titlebar_text">我的课程</string>
+    <string name="main_tab_lesson">课程</string>
+    <string name="main_tab_personal">我</string>
+    <string name="main_lesson_level_1_text">Level 1</string>
+    <string name="main_lesson_level_2_text">Level 2</string>
+    <string name="main_lesson_level_3_text">Level 3</string>
+    <string name="main_lesson_level_desp_text">和Rick老师一起练习正确发音，以后再也不怕别人听不懂啦</string>
+    <string name="lesson_level_star_num_text">0/270</string>
+	<string name="lesson_detail_demo">Hi Professor, can I talk to you about my grade for that last assignment?</string>
+	<string name="lesson_detail_demo_translation">教授您好，我可以和您聊一聊我上一份作业的成绩吗？</string>
+    
+	<string name="error_no_sdcard">没有SD卡，无法存储录音数据</string>
+    <string name="error_state_record">正在录音中，请先停止录音</string>
+    <string name="error_unknown">无法识别的错误</string>
+</resources>

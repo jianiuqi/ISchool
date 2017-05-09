@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="common_theme_color">#2BBFEA</color>
+    <color name="main_background_color">#EDEDED</color>
+    <color name="lesson_level_desp_color">#BABDBF</color>
+    <color name="lesson_sentence_aftercheck_color">#1E8AF7</color>
+    <color name="common_layout_click_color">#EDEDED</color>
+    <color name="sentence_word_pronounce_wrong">#E73133</color>
+    <color name="sentence_word_pronounce_right">#4582C3</color>
+    
+    <color name="kprogresshud_default_color">#b1000000</color>
+    <color name="kprogresshud_grey_color">#449E9E9E</color>
+</resources>

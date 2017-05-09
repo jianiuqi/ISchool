@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/common_root_layout_style"
+    android:background="@android:color/white"
+    tools:ignore="RtlHardcoded,ContentDescription" >
+
+    <include
+        android:id="@+id/title_bar"
+        layout="@layout/common_titlebar_layout" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/option_group_layout"
+        android:layout_below="@id/title_bar"
+        android:overScrollMode="never" >
+    </android.support.v4.view.ViewPager>
+
+    <LinearLayout
+        android:id="@+id/dots_container"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/option_group_layout"
+        android:layout_marginBottom="30dp"
+        android:gravity="center"
+        android:orientation="horizontal" />
+
+    <LinearLayout
+        android:id="@+id/option_group_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_weight="1"
+            >
+			<!-- cpb:progress_background_color="#95FCBF" -->
+            <com.ibm.ischool.ui.view.HoloCircularProgressBar
+                xmlns:cpb="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/server_voice_progress"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                cpb:stroke_width="3dp"
+                cpb:thumb_visible="false"
+                cpb:marker_visible="false"
+                cpb:marker_progress="0"
+                cpb:progress_background_color="#FFFFFF"
+                cpb:progress_color="#00C853"
+                />
+            
+            <ImageView
+	            android:id="@+id/server_voice_play_iv"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:src="@drawable/selector_voice_play"
+	            android:layout_centerInParent="true"
+	            android:layout_margin="4dp" />
+        </RelativeLayout>
+        
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:src="@drawable/selector_btn_mic"
+            android:visibility="invisible" />
+        
+		<RelativeLayout
+		    android:id="@+id/record_play_layout"
+            android:layout_width="0dp"
+            android:layout_height="72dp"
+            android:layout_weight="1"
+            android:visibility="invisible"
+            >
+			<!-- cpb:progress_background_color="#ADE8F7" -->
+            <com.ibm.ischool.ui.view.HoloCircularProgressBar
+                xmlns:cpb="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/record_play_progress"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                cpb:stroke_width="3dp"
+                cpb:thumb_visible="false"
+                cpb:marker_visible="false"
+                cpb:marker_progress="0"
+                cpb:progress_background_color="#FFFFFF"
+                cpb:progress_color="#2BBFEA"
+                /> 
+            
+            <ImageView
+	            android:id="@+id/local_record_play_iv"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:src="@drawable/selector_record_play"
+	            android:layout_centerInParent="true"
+	            android:layout_margin="4dp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <com.ibm.ischool.ui.view.RippleLayout
+        xmlns:ripple="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ripple_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        ripple:rippleDuration="3000"
+        ripple:rippleRadius="40dp"
+        ripple:rippleNums="4"
+        ripple:rippleScale="2"
+        ripple:rippleColor="#92DEF4"
+        ripple:rippleMarginBottom="20dp" >
+
+        <ImageView
+            android:id="@+id/mic_imgview"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:layout_weight="1"
+            android:src="@drawable/selector_btn_mic" />
+    </com.ibm.ischool.ui.view.RippleLayout>
+
+</RelativeLayout>

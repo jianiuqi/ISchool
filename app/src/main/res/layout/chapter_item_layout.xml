@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:rav="http://schemas.android.com/apk/res/com.ibm.ischool"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_round_corner_background_normal"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+
+            <com.ibm.ischool.ui.view.RoundAngleImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/lesson_card_bg"
+                rav:hasBottomLeftCorner="false"
+                rav:hasBottomRightCorner="false"
+                rav:roundHeight="5dip"
+                rav:roundWidth="5dip" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="15dp"
+                android:text="Lesson"
+                android:textColor="@android:color/white"
+                android:textSize="35sp" />
+
+            <TextView
+                android:id="@+id/lesson_num"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:gravity="center_horizontal|bottom"
+                android:text="1"
+                android:textColor="@android:color/white"
+                android:textSize="120sp"
+               	android:textStyle="bold"
+                android:layout_marginBottom="-35dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2" >
+
+            <TextView
+                android:id="@+id/lesson_tip"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:gravity="center_horizontal|left"
+                android:padding="20dp"
+                android:text="123"
+                android:textColor="@color/lesson_level_desp_color" />
+
+            <Button
+                android:id="@+id/start_lesson_btn"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="fill_parent"
+                android:layout_height="60dp"
+                android:layout_above="@+id/lesson_progress_layout"
+                android:layout_margin="18dp"
+                android:background="@drawable/selector_start_lesson_btn"
+                android:text="闯关"
+                android:textColor="@android:color/white"
+                android:textSize="24sp" />
+
+            <LinearLayout
+                android:id="@+id/lesson_progress_layout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="20dp"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <ProgressBar
+                    android:id="@+id/lesson_progress"
+                    style="@style/lesson_level_progressbar_style"
+                    android:layout_weight="6" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:text="1/30"
+                    android:textColor="@color/lesson_level_desp_color" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/lock_mask_rl"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:alpha="0.6"
+            android:background="@drawable/shape_round_corner_background_mask" />
+        <!--
+        <com.ibm.ischool.ui.view.ScaleImageView
+            android:id="@+id/lock_image"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_lock" />
+        -->
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/shape_lock_mask_border"
+            android:gravity="center"
+            android:padding="35dp" >
+
+            <ImageView
+                android:id="@+id/lock_image"
+                android:layout_width="80dp"
+                android:layout_height="96dp"
+                android:src="@drawable/lock_single" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lock_image"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal"
+                android:gravity="center_vertical" >
+
+                <TextView
+                    android:id="@+id/current_star_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10/13"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/icon_star_get" />
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,182 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowAnimationStyle">@style/Animation_Activity</item>
+    </style>
+
+    <style name="Animation_Activity" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/push_right_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/push_left_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/push_left_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/push_right_out</item>
+    </style>
+    
+    <style name="CircularProgressBar">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="stroke_width">5dp</item>
+        <item name="progress" format="float">0.1</item>
+        <item name="progress_color">#ffff4444</item>
+        <item name="progress_background_color">#ffffffff</item>
+        <item name="marker_visible">true</item>
+        <item name="thumb_visible">true</item>
+    </style>
+    
+    <style name="CircularProgressBarLight">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="stroke_width">5dp</item>
+        <item name="progress" format="float">0.1</item>
+        <item name="progress_color">#ffff4444</item>
+        <item name="progress_background_color">#aaa</item>
+        <item name="marker_visible">true</item>
+        <item name="thumb_visible">true</item>
+    </style>
+    
+    <style name="common_root_layout_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/main_background_color</item>
+    </style>
+    
+    <style name="main_tab_bottom">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">0dp</item>
+        <item name="android:layout_marginRight">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:button">@null</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+    
+    <style name="lesson_level_ll_style">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/selector_round_corner_background</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:clickable">true</item>
+    </style>
+    
+    <style name="lesson_level_img_style">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_weight">2</item>
+        <item name="android:background">@color/common_theme_color</item>
+    </style>
+    
+    <style name="lesson_level_text_layout_style">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_weight">3</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+    </style>
+    
+    <style name="lesson_level_textview_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+    
+    <style name="lesson_level_desp_textview_style">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/lesson_level_desp_color</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+    
+    <style name="lesson_level_progressbar_style" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">12dp</item>
+        <item name="android:progress">50</item>
+        <item name="android:max">270</item>
+        <item name="android:progressDrawable">@drawable/progressbar_color</item>
+        <item name="android:background">@drawable/shape_progressbar_bg</item>
+    </style>
+    
+    <style name="lesson_level_star_layout_style">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+    
+    <style name="lesson_level_star_img_style">
+        <item name="android:layout_width">15dp</item>
+        <item name="android:layout_height">15dp</item>
+        <item name="android:src">@drawable/star_yellow</item>
+    </style>
+    
+    <style name="lesson_level_star_num_tv_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:textColor">@color/lesson_level_desp_color</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+    
+    <style name="personal_layout_style">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:background">@drawable/selector_layout_background</item>
+        <item name="android:clickable">true</item>
+    </style>
+    
+    <style name="personal_title_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:textColor">#4a4a4a</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    
+    <style name="common_divide_line">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">0.3dip</item>
+        <item name="android:background">#d5d6d9</item>
+    </style>
+    
+    <style name="personal_content_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:drawableRight">@drawable/icon_arrow_right_small</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#787a7b</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+</resources>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:rav="http://schemas.android.com/apk/res/com.ibm.ischool"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/common_root_layout_style"
+    android:orientation="vertical"
+    tools:ignore="UseCompoundDrawables" >
+
+    <include layout="@layout/common_titlebar_layout" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/lesson_level_1_layout"
+            style="@style/lesson_level_ll_style"
+            android:layout_marginTop="10dp" >
+
+            <com.ibm.ischool.ui.view.RoundAngleImageView
+                style="@style/lesson_level_img_style"
+                android:src="@drawable/main_lesson_level_1"
+                rav:hasBottomRightCorner="false"
+                rav:hasTopRightCorner="false"
+                rav:roundHeight="5dip"
+                rav:roundWidth="5dip"
+                tools:ignore="NestedWeights" />
+
+            <LinearLayout style="@style/lesson_level_text_layout_style" >
+
+                <TextView
+                    style="@style/lesson_level_textview_style"
+                    android:text="@string/main_lesson_level_1_text" />
+
+                <TextView
+                    style="@style/lesson_level_desp_textview_style"
+                    android:text="@string/main_lesson_level_desp_text" />
+
+                <ProgressBar 
+                    android:id="@+id/level_1_star_progress"
+                    style="@style/lesson_level_progressbar_style" />
+
+                <LinearLayout style="@style/lesson_level_star_layout_style" >
+
+                    <ImageView
+                        style="@style/lesson_level_star_img_style"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:id="@+id/level_1_star_num"
+                        style="@style/lesson_level_star_num_tv_style"
+                        android:text="@string/lesson_level_star_num_text" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout 
+            android:id="@+id/lesson_level_2_layout"
+            style="@style/lesson_level_ll_style" >
+
+            <com.ibm.ischool.ui.view.RoundAngleImageView
+                style="@style/lesson_level_img_style"
+                android:src="@drawable/main_lesson_level_2"
+                rav:hasBottomRightCorner="false"
+                rav:hasTopRightCorner="false"
+                rav:roundHeight="5dip"
+                rav:roundWidth="5dip" />
+
+            <LinearLayout style="@style/lesson_level_text_layout_style" >
+
+                <TextView
+                    style="@style/lesson_level_textview_style"
+                    android:text="@string/main_lesson_level_2_text" />
+
+                <TextView
+                    style="@style/lesson_level_desp_textview_style"
+                    android:text="@string/main_lesson_level_desp_text" />
+
+                <ProgressBar 
+                    android:id="@+id/level_2_star_progress"
+                    style="@style/lesson_level_progressbar_style" />
+
+                <LinearLayout style="@style/lesson_level_star_layout_style" >
+
+                    <ImageView
+                        style="@style/lesson_level_star_img_style"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:id="@+id/level_2_star_num"
+                        style="@style/lesson_level_star_num_tv_style"
+                        android:text="@string/lesson_level_star_num_text" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout 
+            android:id="@+id/lesson_level_3_layout"
+            style="@style/lesson_level_ll_style" >
+
+            <com.ibm.ischool.ui.view.RoundAngleImageView
+                style="@style/lesson_level_img_style"
+                android:src="@drawable/main_lesson_level_3"
+                rav:hasBottomRightCorner="false"
+                rav:hasTopRightCorner="false"
+                rav:roundHeight="5dip"
+                rav:roundWidth="5dip" />
+
+            <LinearLayout style="@style/lesson_level_text_layout_style" >
+
+                <TextView
+                    style="@style/lesson_level_textview_style"
+                    android:text="@string/main_lesson_level_3_text" />
+
+                <TextView
+                    style="@style/lesson_level_desp_textview_style"
+                    android:text="@string/main_lesson_level_desp_text" />
+
+                <ProgressBar 
+                    android:id="@+id/level_3_star_progress"
+                    style="@style/lesson_level_progressbar_style" />
+
+                <LinearLayout style="@style/lesson_level_star_layout_style" >
+
+                    <ImageView
+                        style="@style/lesson_level_star_img_style"
+                        android:contentDescription="@null" />
+
+                    <TextView
+                        android:id="@+id/level_3_star_num"
+                        style="@style/lesson_level_star_num_tv_style"
+                        android:text="@string/lesson_level_star_num_text" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
