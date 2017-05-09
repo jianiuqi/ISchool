@@ -51,8 +51,8 @@ public interface ILessonDetailView extends IBaseView {
 	
 	/**
 	 * 设置播放录音布局的可见性
-	 * @param visiablity
+	 * @param visibility
 	 */
-	void setRecordLayoutVisiable(int visibility);
+	void setRecordLayoutVisible(int visibility);
 	
 }

@@ -49,7 +49,7 @@ public class LessonGridPresenterImpl implements ILessonGridPresenter {
 			@Override
 			public void onSuccess(List<LessonEntity> entities) {
 				mEntities = entities;
-				mAdapter = new LessonGridAdapter(mActivity, mEntities);
+				mAdapter = new LessonGridAdapter(mActivity, mEntities, mChapterEntity.getChapterMode());
 				mView.setGridAdapter(mAdapter);
 				mView.setDialogDismiss();
 			}

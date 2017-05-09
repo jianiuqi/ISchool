@@ -3,8 +3,10 @@ package com.ibm.ischool.adapter;
 import java.util.List;
 
 import com.ibm.ischool.R;
+import com.ibm.ischool.base.Constant;
 import com.ibm.ischool.entity.LessonEntity;
 import com.ibm.ischool.ui.activity.LessonDetailActivity_;
+import com.ibm.ischool.ui.activity.TrackingActivity_;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -23,10 +25,13 @@ public class LessonGridAdapter extends BaseAdapter {
 	private List<LessonEntity> mEntities;
 	
 	private Context mContext;
+
+	private int mLearnMode;
 	
-	public LessonGridAdapter(Context context, List<LessonEntity> entities){
+	public LessonGridAdapter(Context context, List<LessonEntity> entities, int learnMode){
 		this.mContext = context;
 		this.mEntities = entities;
+		this.mLearnMode = learnMode;
 	}
 
 	@Override
@@ -107,7 +112,12 @@ public class LessonGridAdapter extends BaseAdapter {
 		
 		@Override
 		public void onClick(View v) {
-			Intent intent = new Intent(mContext, LessonDetailActivity_.class);
+			Intent intent = new Intent();
+			if (mLearnMode == Constant.PASS_MODE) {
+				intent.setClass(mContext, LessonDetailActivity_.class);
+			}else {
+				intent.setClass(mContext, TrackingActivity_.class);
+			}
 			intent.putExtra(LessonEntity.TAG, mEntities.get(position));
 			mContext.startActivity(intent);
 		}

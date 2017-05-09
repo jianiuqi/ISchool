@@ -44,7 +44,7 @@ public interface IWordFragmentView {
 	
 	/**
 	 * 设置星星亮起个数
-	 * @param resourceId
+	 * @param starNum
 	 */
 	void setStarNum(int starNum);
 	

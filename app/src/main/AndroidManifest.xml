@@ -30,6 +30,7 @@
         <activity android:name=".ui.activity.ChapterActivity_" android:screenOrientation="portrait"/>
         <activity android:name=".ui.activity.LessonGridActivity_" android:screenOrientation="portrait"/>
         <activity android:name=".ui.activity.LessonDetailActivity_" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.TrackingActivity_" android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

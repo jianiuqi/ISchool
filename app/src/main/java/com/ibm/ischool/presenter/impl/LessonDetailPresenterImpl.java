@@ -141,7 +141,7 @@ public class LessonDetailPresenterImpl implements ILessonDetailPresenter {
 						return entities;
 					}
 				});*/
-				mView.setRecordLayoutVisiable(View.VISIBLE);
+				mView.setRecordLayoutVisible(View.VISIBLE);
 				int[] score_star = WordEntity.getLessonScoreAndStar(entities);
 				if (score_star[0] > mEntity.getLessonScore()) {
 					ToastUtil.showShortToast(mActivity, "获得新纪录"+ score_star[0] + "分");
@@ -189,7 +189,7 @@ public class LessonDetailPresenterImpl implements ILessonDetailPresenter {
 								return entities;
 							}
 						});
-						mView.setRecordLayoutVisiable(View.VISIBLE);
+						mView.setRecordLayoutVisible(View.VISIBLE);
 						int[] score_star = WordEntity.getLessonScoreAndStar(entities);
 						if (score_star[0] > mEntity.getLessonScore()) {
 							ToastUtil.showShortToast(mActivity, "获得新纪录"+ score_star[0] + "分");
@@ -224,7 +224,7 @@ public class LessonDetailPresenterImpl implements ILessonDetailPresenter {
 								return entities;
 							}
 						});
-						mView.setRecordLayoutVisiable(View.VISIBLE);
+						mView.setRecordLayoutVisible(View.VISIBLE);
 						int[] score_star = WordEntity.getLessonScoreAndStar(entities);
 						if (score_star[0] > mEntity.getLessonScore()) {
 							ToastUtil.showShortToast(mActivity, "获得新纪录"+ score_star[0] + "分");

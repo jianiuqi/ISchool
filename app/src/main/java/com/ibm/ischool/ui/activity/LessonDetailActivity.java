@@ -181,7 +181,7 @@ public class LessonDetailActivity extends BaseActivity implements ILessonDetailV
 	}
 
 	@Override
-	public void setRecordLayoutVisiable(int visibility) {
+	public void setRecordLayoutVisible(int visibility) {
 		mRecordPlayLayout.setVisibility(visibility);
 	}
 	
