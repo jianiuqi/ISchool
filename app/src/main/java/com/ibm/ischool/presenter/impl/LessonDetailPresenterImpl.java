@@ -23,6 +23,7 @@ import com.ibm.ischool.util.PlayerUtils.OnPlayListener;
 import com.ibm.ischool.util.RecordUtil;
 import com.ibm.ischool.util.RecordUtil.OnResultListener;
 import com.ibm.ischool.util.SizeUtils;
+import com.ibm.ischool.util.StringUtils;
 import com.ibm.ischool.util.ToastUtil;
 import com.ibm.ischool.view.ILessonDetailView;
 
@@ -102,9 +103,14 @@ public class LessonDetailPresenterImpl implements ILessonDetailPresenter {
 		myFragmentPagerAdapter = new MyFragmentPagerAdapter(mActivity.getSupportFragmentManager(), mFragments);
         mView.setViewPagerAdapter(myFragmentPagerAdapter);
         // 初始化播放器
-        mPlayerUtils = new PlayerUtils(mView.getVoiceProgressBar());
-        mPlayerUtils.setUrlPrepare(Constant.BASE_SERVER_URL + "/" + mEntity.getUrl());
-		mPlayerUtils.setOnPlayListener(new VoicePlayerListener());
+		if (!StringUtils.isEmpty(mEntity.getUrl())){
+			mPlayerUtils = new PlayerUtils(mView.getVoiceProgressBar());
+			mPlayerUtils.setUrlPrepare(Constant.BASE_SERVER_URL + "/" + mEntity.getUrl());
+			mPlayerUtils.setOnPlayListener(new VoicePlayerListener());
+			mView.setVoiceLayoutVisible(View.VISIBLE);
+		}else {
+			mView.setVoiceLayoutVisible(View.GONE);
+		}
 		mRecordPlayer = new PlayerUtils(mView.getRecordProgressBar());
 		mRecordPlayer.setOnPlayListener(new RecordPlayerListener());
 	}
@@ -298,8 +304,10 @@ public class LessonDetailPresenterImpl implements ILessonDetailPresenter {
 	
 	@Override
 	public void onActivityDestroy() {
-		mPlayerUtils.stop();
-		mRecordPlayer.stop();
+		if (mPlayerUtils != null)
+			mPlayerUtils.stop();
+		if (mRecordPlayer != null)
+			mRecordPlayer.stop();
 		removeRecordFile();
 	}
 

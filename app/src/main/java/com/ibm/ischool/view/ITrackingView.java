@@ -37,6 +37,12 @@ public interface ITrackingView extends IBaseView {
     HoloCircularProgressBar getRecordProgressBar();
 
     /**
+     * 设置标准读音布局可见性
+     * @param visibility
+     */
+    void setVoiceLayoutVisible(int visibility);
+
+    /**
      * 设置标准语音按钮图
      * @param resourceId
      */

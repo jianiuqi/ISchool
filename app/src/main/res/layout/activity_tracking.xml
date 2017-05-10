@@ -25,7 +25,8 @@
             android:id="@+id/icon_level_iv"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/icon_level_1" />
+            android:src="@drawable/icon_level_1"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/lesson_sentence"
@@ -33,7 +34,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
-            android:layout_marginTop="80dp"
             android:gravity="left|center_vertical"
             android:text="@string/lesson_detail_demo"
             android:textColor="@android:color/black"
@@ -50,113 +50,6 @@
             android:text="@string/lesson_detail_demo_translation"
             android:textColor="#84898B"
             android:textSize="16sp" />
-        
-        <LinearLayout
-            android:id="@+id/word_pronounce_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/lesson_sentence_translation"
-            android:layout_marginTop="10dip"
-            android:background="@drawable/shape_word_pronounce_round_background"
-            android:padding="15dp"
-            android:orientation="vertical"
-            android:visibility="gone" >
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" >
-
-                <View
-                    android:layout_width="5dip"
-                    android:layout_height="5dip"
-                    android:background="@drawable/shape_pronounce_word_dot_bg" />
-
-                <TextView
-                    android:id="@+id/word1_raw_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="ever"
-                    android:textColor="@color/sentence_word_pronounce_right"
-                    android:layout_marginLeft="5dp"
-                    android:textSize="18sp" />
-                
-                <ImageView
-                    android:layout_width="10dip"
-                    android:layout_height="10dip"
-                    android:src="@drawable/icon_pronounce_right"
-                    android:layout_marginLeft="20dp"/>
-
-                <TextView
-                    android:id="@+id/word1_pronounce_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="/gred/"
-                    android:textColor="@color/sentence_word_pronounce_right"
-                    android:layout_marginLeft="5dp"
-                    android:textSize="18sp" />
-                
-                <ImageView
-                    android:id="@+id/word1_mp3_iv"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/icon_horn"
-                    android:layout_marginLeft="30dp"
-                    />
-            </LinearLayout>
-            
-            <LinearLayout
-                android:id="@+id/word2_pronounce_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="gone" >
-
-                <View
-                    android:layout_width="5dip"
-                    android:layout_height="5dip"
-                    android:background="@drawable/shape_pronounce_word_dot_bg" />
-
-                <TextView
-                    android:id="@+id/word2_raw_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="ever"
-                    android:textColor="@color/sentence_word_pronounce_right"
-                    android:layout_marginLeft="5dp"
-                    android:textSize="18sp" />
-                
-                <ImageView
-                    android:layout_width="10dip"
-                    android:layout_height="10dip"
-                    android:src="@drawable/icon_pronounce_right"
-                    android:layout_marginLeft="20dp"/>
-
-                <TextView
-                    android:id="@+id/word2_pronounce_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="/gred/"
-                    android:textColor="@color/sentence_word_pronounce_right"
-                    android:layout_marginLeft="5dp"
-                    android:textSize="18sp" />
-                
-                <ImageView
-                    android:id="@+id/word2_mp3_iv"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/icon_horn"
-                    android:layout_marginLeft="30dp"
-                    />
-            </LinearLayout>
-            
-        </LinearLayout>
 
     </RelativeLayout>
 
@@ -171,6 +64,7 @@
         android:orientation="horizontal" >
 
         <RelativeLayout
+            android:id="@+id/server_voice_layout"
             android:layout_width="0dp"
             android:layout_height="72dp"
             android:layout_weight="1"

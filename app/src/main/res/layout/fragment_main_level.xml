@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:rav="http://schemas.android.com/apk/res/com.ibm.ischool"
+    xmlns:rav="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/common_root_layout_style"
     android:orientation="vertical"

@@ -38,6 +38,7 @@
         android:orientation="horizontal" >
 
         <RelativeLayout
+            android:id="@+id/server_voice_layout"
             android:layout_width="0dp"
             android:layout_height="72dp"
             android:layout_weight="1"

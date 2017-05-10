@@ -58,6 +58,9 @@ public class TrackingActivity extends BaseActivity implements ITrackingView{
     @ViewById(R.id.record_play_layout)
     RelativeLayout mRecordPlayLayout;
 
+    @ViewById(R.id.server_voice_layout)
+    RelativeLayout mServerVoiceLayout;
+
     ITrackingPresenter mPresenter;
 
     boolean mIsRecording = false;
@@ -124,6 +127,11 @@ public class TrackingActivity extends BaseActivity implements ITrackingView{
     @Override
     public HoloCircularProgressBar getRecordProgressBar() {
         return mRecordPlayBar;
+    }
+
+    @Override
+    public void setVoiceLayoutVisible(int visibility) {
+        mServerVoiceLayout.setVisibility(visibility);
     }
 
     @Override

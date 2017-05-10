@@ -140,13 +140,8 @@ public class CRLSpeechUtil {
 							}
 							if (state == null) {
 								String recogResult = jsonObject.getString("results");
-								//System.out.println(recogResult);
 								if (!StringUtils.isEmpty(recogResult)){
-									if (!StringUtils.isEquals("0", recogResult.substring(0,1))) {
-										if (recogResult.length() > 3){ //识别有内容时再返回
-											mListener.onSuccess(recogResult.substring(4));
-										}
-									}
+                                    mListener.onSuccess(recogResult);
 								}
 								return;
 							}

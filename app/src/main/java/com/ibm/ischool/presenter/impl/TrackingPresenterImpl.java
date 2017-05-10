@@ -78,11 +78,16 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
         mView.setSentenceContent(mEntity.getLessonContent());
         mView.setTranslation(mEntity.getTranslation());
         // 初始化播放器
-        mPlayerUtils = new PlayerUtils(mView.getVoiceProgressBar());
-        mPlayerUtils.setUrlPrepare(Constant.BASE_SERVER_URL + "/" + mEntity.getUrl());
-        mPlayerUtils.setOnPlayListener(new TrackingPresenterImpl.VoicePlayerListener());
-        mRecordPlayer = new PlayerUtils(mView.getRecordProgressBar());
-        mRecordPlayer.setOnPlayListener(new TrackingPresenterImpl.RecordPlayerListener());
+        if (!StringUtils.isEmpty(mEntity.getUrl())){
+            mPlayerUtils = new PlayerUtils(mView.getVoiceProgressBar());
+            mPlayerUtils.setUrlPrepare(Constant.BASE_SERVER_URL + "/" + mEntity.getUrl());
+            mPlayerUtils.setOnPlayListener(new TrackingPresenterImpl.VoicePlayerListener());
+            mRecordPlayer = new PlayerUtils(mView.getRecordProgressBar());
+            mRecordPlayer.setOnPlayListener(new TrackingPresenterImpl.RecordPlayerListener());
+            mView.setVoiceLayoutVisible(View.VISIBLE);
+        }else {
+            mView.setVoiceLayoutVisible(View.GONE);
+        }
         //初始化待匹配的单词
         String[] sentenceWords = mEntity.getLessonContent().split(" ");
         for (String word : sentenceWords) {
@@ -95,55 +100,29 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
         CRLSpeechUtil.getInstance().startRecog();
         CRLSpeechUtil.getInstance().setListener(new CRLSpeechUtil.OnResultListener() {
             @Override
-            public void onSuccess(String content) {
-                System.out.println("content:" + content);
-                String[] words = content.split(" ");
-                int sizeCount = words.length > mNeedMatchWords.size()? mNeedMatchWords.size() : words.length;
-                // 本次读对的单词个数
-                int rightNum = 0;
-                for (int i = 0; i < sizeCount; i++) {
-                    String needMatchWord = mNeedMatchWords.get(i).replace(".", "").replace(",", "")
-                            .replace(":", "").replace("?", "").toUpperCase();
-                    if (StringUtils.isEquals(words[i].replace(" ", ""), needMatchWord)) {
-                        mRightWords.add(mNeedMatchWords.get(i));
-                        rightNum ++;
+            public void onSuccess(final String content) {
+                //System.out.println("content:" + content);
+                if (mNeedMatchWords.size() > 0) {
+                    if (StringUtils.isEquals("0", content.substring(0,1))) { // 临时识别结果
+                        if (content.length() > 3){ //识别有内容时再返回
+                            mActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mView.setSentenceContent(containsTempMatch(content.substring(4)));
+                                }
+                            });
+                        }
                     }else {
-                        break;
+                        if (content.length() > 3){ //识别有内容时再返回
+                            mActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mView.setSentenceContent(containsMatch(content.substring(4)));
+                                }
+                            });
+                        }
                     }
                 }
-                for (int i = 0; i < rightNum; i++) {
-                    mNeedMatchWords.remove(0);
-                }
-                // 拼接句子
-                final SpannableStringBuilder builder = new SpannableStringBuilder();
-                //对的单词
-                for (int i = 0; i < mRightWords.size(); i++) {
-                    if (i != 0){
-                        builder.append(" ");
-                    }
-                    String rightWord = mRightWords.get(i);
-                    builder.append(rightWord);
-                    builder.setSpan(new ForegroundColorSpan(Color.parseColor("#2BBFEA")), builder.length()-rightWord.length(),
-                            builder.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-                }
-                //待匹配的单词
-                for (int i = 0; i < mNeedMatchWords.size(); i++) {
-                    if (mRightWords.size() > 0){
-                        builder.append(" ");
-                    } else{
-                        if (i != 0) builder.append(" ");
-                    }
-                    String needWord = mNeedMatchWords.get(i);
-                    builder.append(needWord);
-                    builder.setSpan(new ForegroundColorSpan(Color.BLACK), builder.length()-needWord.length(),
-                            builder.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-                }
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mView.setSentenceContent(builder);
-                    }
-                });
             }
 
             @Override
@@ -153,7 +132,199 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
         });
     }
 
+    /**
+     * 最大长度匹配规则
+     */
+    private SpannableStringBuilder containsMatch(String content){
+        String[] words = content.trim().split(" ");
+        String firstNeedMatchWord = mNeedMatchWords.get(0).replace(".", "").replace(",", "")
+                .replace(":", "").replace("?", "").toUpperCase();
+        //1.先获取待匹配的第一个单词在识别结果中的所有的index
+        List<Integer> firstMatchIndexes = new ArrayList<>();
+        for (int i = 0; i < words.length; i++) {
+            if (StringUtils.isEquals(words[i].replace(" ", ""), firstNeedMatchWord)) {
+                firstMatchIndexes.add(i);
+            }
+        }
+        //2.查看每个index后有多少匹配的单词
+        int maxMatchSize = 0;
+        for (int i = 0; i < firstMatchIndexes.size(); i++) {
+            int index = firstMatchIndexes.get(i);
+            int maxMatchSizeTemp = 0;
+            int sizeCount = (words.length - index) > mNeedMatchWords.size()? mNeedMatchWords.size() : (words.length - index);
+            for (int j = 0; j < sizeCount; j++) {
+                String needWord = mNeedMatchWords.get(j).replace(".", "").replace(",", "")
+                        .replace(":", "").replace("?", "").toUpperCase();
+                String recogWord = words[j + index].replace(" ", "");
+                if (StringUtils.isEquals(recogWord, needWord)){
+                    maxMatchSizeTemp ++;
+                }
+            }
+            if (maxMatchSizeTemp > maxMatchSize) {
+                maxMatchSize = maxMatchSizeTemp;
+            }
+        }
+        //3.操作正确的List和待匹配的List
+        for (int i = 0; i < maxMatchSize; i++) {
+            mRightWords.add(mNeedMatchWords.get(i));
+        }
+        for (int i = 0; i < maxMatchSize; i++) {
+            mNeedMatchWords.remove(0);
+        }
+        // 拼接句子
+        final SpannableStringBuilder builder = new SpannableStringBuilder();
+        //对的单词
+        for (int i = 0; i < mRightWords.size(); i++) {
+            if (i != 0){
+                builder.append(" ");
+            }
+            String rightWord = mRightWords.get(i);
+            builder.append(rightWord);
+            builder.setSpan(new ForegroundColorSpan(Color.parseColor("#2BBFEA")), builder.length()-rightWord.length(),
+                    builder.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        }
+        //待匹配的单词
+        for (int i = 0; i < mNeedMatchWords.size(); i++) {
+            if (mRightWords.size() > 0){
+                builder.append(" ");
+            } else{
+                if (i != 0) builder.append(" ");
+            }
+            String needWord = mNeedMatchWords.get(i);
+            builder.append(needWord);
+            builder.setSpan(new ForegroundColorSpan(Color.BLACK), builder.length()-needWord.length(),
+                    builder.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        }
+        return builder;
+    }
 
+    /**
+     * 临时结果匹配
+     * @param content
+     * @return
+     */
+    private SpannableStringBuilder containsTempMatch(String content) {
+        List<String> tempRightWords = new ArrayList<>();
+        String[] tempWords = content.trim().split(" ");
+        String firstNeedMatchWord = mNeedMatchWords.get(0).replace(".", "").replace(",", "")
+                .replace(":", "").replace("?", "").toUpperCase();
+        //1.先获取待匹配的第一个单词在识别结果中的所有的index
+        List<Integer> firstMatchIndexes = new ArrayList<>();
+        for (int i = 0; i < tempWords.length; i++) {
+            if (StringUtils.isEquals(tempWords[i].replace(" ", ""), firstNeedMatchWord)) {
+                firstMatchIndexes.add(i);
+            }
+        }
+        //2.查看每个index后有多少匹配的单词
+        int maxMatchSize = 0;
+        for (int i = 0; i < firstMatchIndexes.size(); i++) {
+            int index = firstMatchIndexes.get(i);
+            int maxMatchSizeTemp = 0;
+            int sizeCount = (tempWords.length - index) > mNeedMatchWords.size()? mNeedMatchWords.size() : (tempWords.length - index);
+            for (int j = 0; j < sizeCount; j++) {
+                String needWord = mNeedMatchWords.get(j).replace(".", "").replace(",", "")
+                        .replace(":", "").replace("?", "").toUpperCase();
+                String recogWord = tempWords[j + index].replace(" ", "");
+                if (StringUtils.isEquals(recogWord, needWord)){
+                    maxMatchSizeTemp ++;
+                }
+            }
+            if (maxMatchSizeTemp > maxMatchSize) {
+                maxMatchSize = maxMatchSizeTemp;
+            }
+        }
+        //3.操作正确的List和待匹配的List
+        for (int i = 0; i < maxMatchSize; i++) {
+            tempRightWords.add(mNeedMatchWords.get(i));
+        }
+        // 拼接句子
+        final SpannableStringBuilder builder = new SpannableStringBuilder();
+        //对的单词
+        for (int i = 0; i < mRightWords.size(); i++) {
+            if (i != 0){
+                builder.append(" ");
+            }
+            String rightWord = mRightWords.get(i);
+            builder.append(rightWord);
+            builder.setSpan(new ForegroundColorSpan(Color.parseColor("#2BBFEA")), builder.length()-rightWord.length(),
+                    builder.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        }
+        //临时识别对的单词 用黄色标记#F4BB2C
+        for (int i = 0; i < tempRightWords.size(); i++) {
+            if (mRightWords.size() > 0){
+                builder.append(" ");
+            } else{
+                if (i != 0) builder.append(" ");
+            }
+            String tempRightWord = tempRightWords.get(i);
+            builder.append(tempRightWord);
+            builder.setSpan(new ForegroundColorSpan(Color.parseColor("#F4BB2C")), builder.length()-tempRightWord.length(),
+                    builder.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        }
+        //待匹配的单词
+        for (int i = tempRightWords.size(); i < mNeedMatchWords.size(); i++) {
+            if (mRightWords.size() > 0){
+                builder.append(" ");
+            } else{
+                if (i != 0) builder.append(" ");
+            }
+            String needWord = mNeedMatchWords.get(i);
+            builder.append(needWord);
+            builder.setSpan(new ForegroundColorSpan(Color.BLACK), builder.length()-needWord.length(),
+                    builder.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        }
+        return builder;
+    }
+
+    /**
+     * 开头匹配规则
+     * @return
+     */
+    @SuppressWarnings("unused")
+    private SpannableStringBuilder matchStart(String content){
+        String[] words = content.trim().split(" ");
+        int sizeCount = words.length > mNeedMatchWords.size()? mNeedMatchWords.size() : words.length;
+        // 本次读对的单词个数
+        int rightNum = 0;
+        for (int i = 0; i < sizeCount; i++) {
+            String needMatchWord = mNeedMatchWords.get(i).replace(".", "").replace(",", "")
+                    .replace(":", "").replace("?", "").toUpperCase();
+            if (StringUtils.isEquals(words[i].replace(" ", ""), needMatchWord)) {
+                mRightWords.add(mNeedMatchWords.get(i));
+                rightNum ++;
+            }else {
+                break;
+            }
+        }
+        for (int i = 0; i < rightNum; i++) {
+            mNeedMatchWords.remove(0);
+        }
+        // 拼接句子
+        final SpannableStringBuilder builder = new SpannableStringBuilder();
+        //对的单词
+        for (int i = 0; i < mRightWords.size(); i++) {
+            if (i != 0){
+                builder.append(" ");
+            }
+            String rightWord = mRightWords.get(i);
+            builder.append(rightWord);
+            builder.setSpan(new ForegroundColorSpan(Color.parseColor("#2BBFEA")), builder.length()-rightWord.length(),
+                    builder.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        }
+        //待匹配的单词
+        for (int i = 0; i < mNeedMatchWords.size(); i++) {
+            if (mRightWords.size() > 0){
+                builder.append(" ");
+            } else{
+                if (i != 0) builder.append(" ");
+            }
+            String needWord = mNeedMatchWords.get(i);
+            builder.append(needWord);
+            builder.setSpan(new ForegroundColorSpan(Color.BLACK), builder.length()-needWord.length(),
+                    builder.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        }
+        return builder;
+    }
 
     @Override
     public void stopRecord() {
@@ -174,8 +345,10 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
 
     @Override
     public void onActivityDestroy() {
-        mPlayerUtils.stop();
-        mRecordPlayer.stop();
+        if (mPlayerUtils != null)
+            mPlayerUtils.stop();
+        if (mRecordPlayer != null)
+            mRecordPlayer.stop();
         removeRecordFile();
         CRLSpeechUtil.getInstance().stopRecording();
     }

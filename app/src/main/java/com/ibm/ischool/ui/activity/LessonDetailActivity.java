@@ -62,6 +62,9 @@ public class LessonDetailActivity extends BaseActivity implements ILessonDetailV
 	
 	@ViewById(R.id.record_play_layout)
 	RelativeLayout mRecordPlayLayout;
+
+	@ViewById(R.id.server_voice_layout)
+	RelativeLayout mServerVoiceLayout;
 	
 	@AfterViews
 	void initView(){
@@ -135,6 +138,11 @@ public class LessonDetailActivity extends BaseActivity implements ILessonDetailV
 	@Override
 	public View getCircelChildView(int index) {
 		return mDotsContainer.getChildAt(index);
+	}
+
+	@Override
+	public void setVoiceLayoutVisible(int visibility) {
+		mServerVoiceLayout.setVisibility(visibility);
 	}
 
 	@Override

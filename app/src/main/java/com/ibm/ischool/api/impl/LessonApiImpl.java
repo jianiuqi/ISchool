@@ -36,7 +36,7 @@ public class LessonApiImpl implements ILessonApi{
 	@Override
 	public void getLessonsChapterId(final ChapterEntity chapterEntity, final IResponseApi<List<LessonEntity>> api) {
 		RequestParams params = new RequestParams();
-		HttpUtils.httpAsyncGet("/lesson?chapterId=1", params, new JsonHttpResponseHandler(){
+		HttpUtils.httpAsyncGet("/lesson?chapterId=1&mode=" + chapterEntity.getChapterMode(), params, new JsonHttpResponseHandler(){
 			
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, JSONArray array) {

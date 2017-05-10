@@ -24,7 +24,12 @@ public interface ILessonDetailView extends IBaseView {
 	 * @return
 	 */
 	View getCircelChildView(int index);
-	
+
+	/**
+	 * 设置标准读音布局可见性
+	 */
+	void setVoiceLayoutVisible(int visibility);
+
 	/**
 	 * 获取标准音进度条
 	 * @return
