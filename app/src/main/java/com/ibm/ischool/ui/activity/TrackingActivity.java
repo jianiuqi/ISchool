@@ -12,6 +12,7 @@ import com.ibm.ischool.presenter.ITrackingPresenter;
 import com.ibm.ischool.presenter.impl.TrackingPresenterImpl;
 import com.ibm.ischool.ui.view.HoloCircularProgressBar;
 import com.ibm.ischool.ui.view.RippleLayout;
+import com.ibm.ischool.ui.view.CursorTextView;
 import com.ibm.ischool.view.ITrackingView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -32,7 +33,7 @@ public class TrackingActivity extends BaseActivity implements ITrackingView{
     TextView mTitleBar;
 
     @ViewById(R.id.lesson_sentence)
-    TextView mLessonSentence;
+    CursorTextView mLessonSentence;
 
     @ViewById(R.id.lesson_sentence_translation)
     TextView mTranslation;
@@ -63,8 +64,6 @@ public class TrackingActivity extends BaseActivity implements ITrackingView{
 
     ITrackingPresenter mPresenter;
 
-    boolean mIsRecording = false;
-
     @AfterViews
     void initView(){
         mPresenter = new TrackingPresenterImpl(this);
@@ -84,15 +83,7 @@ public class TrackingActivity extends BaseActivity implements ITrackingView{
                 mPresenter.onRecordImageClick();
                 break;
             case R.id.mic_imgview:
-                if (mIsRecording) {
-                    mRippleLayout.stopRippleAnimation();
-                    mPresenter.stopRecord();
-                    mIsRecording = false;
-                }else {
-                    mRippleLayout.startRippleAnimation();
-                    mPresenter.startRecord();
-                    mIsRecording = true;
-                }
+                mPresenter.onRecordClick();
                 break;
             default:
                 break;
@@ -153,5 +144,20 @@ public class TrackingActivity extends BaseActivity implements ITrackingView{
     @Override
     public void setRecordLayoutVisible(int visibility) {
         mRecordPlayLayout.setVisibility(visibility);
+    }
+
+    @Override
+    public void startRippleAnim() {
+        mRippleLayout.startRippleAnimation();
+    }
+
+    @Override
+    public void stopRippleAnim() {
+        mRippleLayout.stopRippleAnimation();
+    }
+
+    @Override
+    public void setCursorPosition(int position) {
+        mLessonSentence.setSelection(position);
     }
 }

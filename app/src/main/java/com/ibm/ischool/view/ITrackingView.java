@@ -59,4 +59,20 @@ public interface ITrackingView extends IBaseView {
      * @param visibility
      */
     void setRecordLayoutVisible(int visibility);
+
+    /**
+     * 开始录音动画
+     */
+    void startRippleAnim();
+
+    /**
+     * 停止录音动画
+     */
+    void stopRippleAnim();
+
+    /**
+     * 设置光标位置
+     * @param position
+     */
+    void setCursorPosition(int position);
 }

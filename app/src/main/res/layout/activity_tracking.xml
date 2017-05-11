@@ -28,7 +28,7 @@
             android:src="@drawable/icon_level_1"
             android:visibility="gone"/>
 
-        <TextView
+        <com.ibm.ischool.ui.view.CursorTextView
             android:id="@+id/lesson_sentence"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -37,7 +37,10 @@
             android:gravity="left|center_vertical"
             android:text="@string/lesson_detail_demo"
             android:textColor="@android:color/black"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:background="@android:color/transparent"
+            android:textCursorDrawable="@drawable/shape_textview_cursor"
+            />
 
         <TextView
             android:id="@+id/lesson_sentence_translation"

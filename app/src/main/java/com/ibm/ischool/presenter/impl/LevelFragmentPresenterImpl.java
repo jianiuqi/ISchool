@@ -38,8 +38,10 @@ public class LevelFragmentPresenterImpl implements ILevelFragmentPresenter{
 	@Override
 	public void startChapter(final int level) {
 		final Intent intent = new Intent(mActivity, ChapterActivity_.class);
-		final SweetAlertDialog dialog = new SweetAlertDialog(mActivity);
-		dialog.setTitleText("选择游戏模式")
+		final SweetAlertDialog dialog = new SweetAlertDialog(mActivity, SweetAlertDialog.CUSTOM_IMAGE_TYPE);
+		dialog.setTitleText("提示")
+				.setCustomImage(R.drawable.icon_level_1)
+                .setContentText("请选择游戏模式")
 				.setConfirmText("闯关")
 				.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
 					@Override

@@ -22,6 +22,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 /**
  * Created by jnq on 2017/5/9.
  */
@@ -64,6 +66,15 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
      */
     private List<String> mNeedMatchWords = new ArrayList<>();
 
+    /**
+     * 待匹配的停顿
+     */
+    private List<String> mNeedPauses = new ArrayList<>();
+
+    boolean mIsRecording = false;
+
+    int mCursorPosition = 0;
+
     public TrackingPresenterImpl(ITrackingView view){
         this.mView = view;
         this.mActivity = (FragmentActivity) view;
@@ -75,7 +86,7 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
         mEntity = intent.getParcelableExtra(LessonEntity.TAG);
         mView.setBackBtnVisiable(View.VISIBLE);
         mView.setTitleText("Lesson " + mEntity.getLessonNum());
-        mView.setSentenceContent(mEntity.getLessonContent());
+        mView.setSentenceContent(mEntity.getLessonContent().replace("|", ""));
         mView.setTranslation(mEntity.getTranslation());
         // 初始化播放器
         if (!StringUtils.isEmpty(mEntity.getUrl())){
@@ -93,15 +104,33 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
         for (String word : sentenceWords) {
             mNeedMatchWords.add(word);
         }
+        //初始化待匹配的停顿
+        String[] pauseSentences = mEntity.getLessonContent().split("\\|");
+        for (String pauseSentence: pauseSentences) {
+            mNeedPauses.add(pauseSentence.trim());
+        }
     }
 
     @Override
-    public void startRecord() {
+    public void onRecordClick() {
+        if(mIsRecording) {
+            stopRecord();
+            mIsRecording = false;
+            mView.stopRippleAnim();
+        }else {
+            startRecord();
+            mIsRecording = true;
+            mView.startRippleAnim();
+        }
+    }
+
+    private void startRecord() {
+        final SweetAlertDialog dialog = new SweetAlertDialog(mActivity, SweetAlertDialog.CUSTOM_IMAGE_TYPE);
         CRLSpeechUtil.getInstance().startRecog();
         CRLSpeechUtil.getInstance().setListener(new CRLSpeechUtil.OnResultListener() {
             @Override
             public void onSuccess(final String content) {
-                //System.out.println("content:" + content);
+                System.out.println("content:" + content);
                 if (mNeedMatchWords.size() > 0) {
                     if (StringUtils.isEquals("0", content.substring(0,1))) { // 临时识别结果
                         if (content.length() > 3){ //识别有内容时再返回
@@ -109,6 +138,7 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
                                 @Override
                                 public void run() {
                                     mView.setSentenceContent(containsTempMatch(content.substring(4)));
+                                    mView.setCursorPosition(mCursorPosition);
                                 }
                             });
                         }
@@ -117,11 +147,57 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
                             mActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mView.setSentenceContent(containsMatch(content.substring(4)));
+                                    mView.setSentenceContent(pauseMatchRule(content.substring(4)));
+                                    mView.setCursorPosition(mCursorPosition);
                                 }
                             });
                         }
                     }
+                }else {
+                    // 读完之后停止录音并结束动画
+                    CRLSpeechUtil.getInstance().stopRecording();
+                    mIsRecording = false;
+                    mCursorPosition = 0;
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!dialog.isShowing()) {
+                                mView.stopRippleAnim();
+                                dialog.setTitleText("太棒了")
+                                        .setCustomImage(R.drawable.icon_level_1)
+                                        .setConfirmText("重读")
+                                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                mRightWords.clear();
+                                                mNeedMatchWords.clear();
+                                                mNeedPauses.clear();
+                                                mView.setSentenceContent(mEntity.getLessonContent().replace("|", ""));
+                                                //初始化待匹配的单词
+                                                String[] sentenceWords = mEntity.getLessonContent().split(" ");
+                                                for (String word : sentenceWords) {
+                                                    mNeedMatchWords.add(word);
+                                                }
+                                                //初始化待匹配的停顿
+                                                String[] pauseSentences = mEntity.getLessonContent().split("\\|");
+                                                for (String pauseSentence: pauseSentences) {
+                                                    mNeedPauses.add(pauseSentence.trim());
+                                                }
+                                                mView.setCursorPosition(mCursorPosition);
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .setCancelText("关闭")
+                                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                dialog.show();
+                            }
+                        }
+                    });
                 }
             }
 
@@ -133,12 +209,14 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
     }
 
     /**
-     * 最大长度匹配规则
+     * 停顿匹配规则
+     * @param content
+     * @return
      */
-    private SpannableStringBuilder containsMatch(String content){
+    private SpannableStringBuilder pauseMatchRule(String content) {
         String[] words = content.trim().split(" ");
         String firstNeedMatchWord = mNeedMatchWords.get(0).replace(".", "").replace(",", "")
-                .replace(":", "").replace("?", "").toUpperCase();
+                .replace(":", "").replace("?", "").replace("|", "").toUpperCase();
         //1.先获取待匹配的第一个单词在识别结果中的所有的index
         List<Integer> firstMatchIndexes = new ArrayList<>();
         for (int i = 0; i < words.length; i++) {
@@ -154,7 +232,93 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
             int sizeCount = (words.length - index) > mNeedMatchWords.size()? mNeedMatchWords.size() : (words.length - index);
             for (int j = 0; j < sizeCount; j++) {
                 String needWord = mNeedMatchWords.get(j).replace(".", "").replace(",", "")
-                        .replace(":", "").replace("?", "").toUpperCase();
+                        .replace(":", "").replace("?", "").replace("|", "").toUpperCase();
+                String recogWord = words[j + index].replace(" ", "");
+                if (StringUtils.isEquals(recogWord, needWord)){
+                    maxMatchSizeTemp ++;
+                }
+            }
+            if (maxMatchSizeTemp > maxMatchSize) {
+                maxMatchSize = maxMatchSizeTemp;
+            }
+        }
+        //3.判断正确的单词个数和停顿长度匹配度
+        int needPauseWordLength = 0;
+        int maxPauseMatchSize = 0;
+        int maxMatchSizeCopy = 0;
+        for (int i = 0; i < mNeedPauses.size(); i++) {
+            String[] pauseWords = mNeedPauses.get(i).split(" ");
+            needPauseWordLength = needPauseWordLength + pauseWords.length;
+            //待匹配的单词长度大于最大匹配个数
+            if (needPauseWordLength > maxMatchSize){
+                break;
+            }
+            maxPauseMatchSize ++;
+            maxMatchSizeCopy = needPauseWordLength;
+        }
+        maxMatchSize = maxMatchSizeCopy;
+        //4.移除待匹配的断句
+        for (int i = 0; i < maxPauseMatchSize; i++) {
+            mNeedPauses.remove(0);
+        }
+        //5.操作正确的List和待匹配的List
+        for (int i = 0; i < maxMatchSize; i++) {
+            mRightWords.add(mNeedMatchWords.get(i));
+        }
+        for (int i = 0; i < maxMatchSize; i++) {
+            mNeedMatchWords.remove(0);
+        }
+        // 拼接句子
+        final SpannableStringBuilder builder = new SpannableStringBuilder();
+        //对的单词
+        for (int i = 0; i < mRightWords.size(); i++) {
+            if (i != 0){
+                builder.append(" ");
+            }
+            String rightWord = mRightWords.get(i).replace("|", "");
+            builder.append(rightWord);
+            builder.setSpan(new ForegroundColorSpan(Color.parseColor("#2BBFEA")), builder.length()-rightWord.length(),
+                    builder.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        }
+        mCursorPosition = builder.length();
+        //待匹配的单词
+        for (int i = 0; i < mNeedMatchWords.size(); i++) {
+            if (mRightWords.size() > 0){
+                builder.append(" ");
+            } else{
+                if (i != 0) builder.append(" ");
+            }
+            String needWord = mNeedMatchWords.get(i).replace("|", "");
+            builder.append(needWord);
+            builder.setSpan(new ForegroundColorSpan(Color.BLACK), builder.length()-needWord.length(),
+                    builder.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+        }
+        return builder;
+    }
+
+    /**
+     * 最大长度匹配规则
+     */
+    private SpannableStringBuilder containsMatch(String content){
+        String[] words = content.trim().split(" ");
+        String firstNeedMatchWord = mNeedMatchWords.get(0).replace(".", "").replace(",", "")
+                .replace(":", "").replace("?", "").replace("|", "").toUpperCase();
+        //1.先获取待匹配的第一个单词在识别结果中的所有的index
+        List<Integer> firstMatchIndexes = new ArrayList<>();
+        for (int i = 0; i < words.length; i++) {
+            if (StringUtils.isEquals(words[i].replace(" ", ""), firstNeedMatchWord)) {
+                firstMatchIndexes.add(i);
+            }
+        }
+        //2.查看每个index后有多少匹配的单词
+        int maxMatchSize = 0;
+        for (int i = 0; i < firstMatchIndexes.size(); i++) {
+            int index = firstMatchIndexes.get(i);
+            int maxMatchSizeTemp = 0;
+            int sizeCount = (words.length - index) > mNeedMatchWords.size()? mNeedMatchWords.size() : (words.length - index);
+            for (int j = 0; j < sizeCount; j++) {
+                String needWord = mNeedMatchWords.get(j).replace(".", "").replace(",", "")
+                        .replace(":", "").replace("?", "").replace("|", "").toUpperCase();
                 String recogWord = words[j + index].replace(" ", "");
                 if (StringUtils.isEquals(recogWord, needWord)){
                     maxMatchSizeTemp ++;
@@ -178,11 +342,12 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
             if (i != 0){
                 builder.append(" ");
             }
-            String rightWord = mRightWords.get(i);
+            String rightWord = mRightWords.get(i).replace("|", "");
             builder.append(rightWord);
             builder.setSpan(new ForegroundColorSpan(Color.parseColor("#2BBFEA")), builder.length()-rightWord.length(),
                     builder.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         }
+        mCursorPosition = builder.length();
         //待匹配的单词
         for (int i = 0; i < mNeedMatchWords.size(); i++) {
             if (mRightWords.size() > 0){
@@ -190,7 +355,7 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
             } else{
                 if (i != 0) builder.append(" ");
             }
-            String needWord = mNeedMatchWords.get(i);
+            String needWord = mNeedMatchWords.get(i).replace("|", "");
             builder.append(needWord);
             builder.setSpan(new ForegroundColorSpan(Color.BLACK), builder.length()-needWord.length(),
                     builder.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
@@ -207,7 +372,7 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
         List<String> tempRightWords = new ArrayList<>();
         String[] tempWords = content.trim().split(" ");
         String firstNeedMatchWord = mNeedMatchWords.get(0).replace(".", "").replace(",", "")
-                .replace(":", "").replace("?", "").toUpperCase();
+                .replace(":", "").replace("?", "").replace("|", "").toUpperCase();
         //1.先获取待匹配的第一个单词在识别结果中的所有的index
         List<Integer> firstMatchIndexes = new ArrayList<>();
         for (int i = 0; i < tempWords.length; i++) {
@@ -223,7 +388,7 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
             int sizeCount = (tempWords.length - index) > mNeedMatchWords.size()? mNeedMatchWords.size() : (tempWords.length - index);
             for (int j = 0; j < sizeCount; j++) {
                 String needWord = mNeedMatchWords.get(j).replace(".", "").replace(",", "")
-                        .replace(":", "").replace("?", "").toUpperCase();
+                        .replace(":", "").replace("?", "").replace("|", "").toUpperCase();
                 String recogWord = tempWords[j + index].replace(" ", "");
                 if (StringUtils.isEquals(recogWord, needWord)){
                     maxMatchSizeTemp ++;
@@ -244,11 +409,12 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
             if (i != 0){
                 builder.append(" ");
             }
-            String rightWord = mRightWords.get(i);
+            String rightWord = mRightWords.get(i).replace("|", "");
             builder.append(rightWord);
             builder.setSpan(new ForegroundColorSpan(Color.parseColor("#2BBFEA")), builder.length()-rightWord.length(),
                     builder.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         }
+        mCursorPosition = builder.length();
         //临时识别对的单词 用黄色标记#F4BB2C
         for (int i = 0; i < tempRightWords.size(); i++) {
             if (mRightWords.size() > 0){
@@ -256,7 +422,7 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
             } else{
                 if (i != 0) builder.append(" ");
             }
-            String tempRightWord = tempRightWords.get(i);
+            String tempRightWord = tempRightWords.get(i).replace("|", "");
             builder.append(tempRightWord);
             builder.setSpan(new ForegroundColorSpan(Color.parseColor("#F4BB2C")), builder.length()-tempRightWord.length(),
                     builder.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
@@ -268,7 +434,7 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
             } else{
                 if (i != 0) builder.append(" ");
             }
-            String needWord = mNeedMatchWords.get(i);
+            String needWord = mNeedMatchWords.get(i).replace("|", "");
             builder.append(needWord);
             builder.setSpan(new ForegroundColorSpan(Color.BLACK), builder.length()-needWord.length(),
                     builder.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
@@ -288,7 +454,7 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
         int rightNum = 0;
         for (int i = 0; i < sizeCount; i++) {
             String needMatchWord = mNeedMatchWords.get(i).replace(".", "").replace(",", "")
-                    .replace(":", "").replace("?", "").toUpperCase();
+                    .replace(":", "").replace("?", "").replace("|", "").toUpperCase();
             if (StringUtils.isEquals(words[i].replace(" ", ""), needMatchWord)) {
                 mRightWords.add(mNeedMatchWords.get(i));
                 rightNum ++;
@@ -326,8 +492,7 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
         return builder;
     }
 
-    @Override
-    public void stopRecord() {
+    private void stopRecord() {
         CRLSpeechUtil.getInstance().stopRecording();
     }
 

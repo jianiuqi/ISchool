@@ -9,14 +9,9 @@ public interface ITrackingPresenter {
     void initView();
 
     /**
-     * 开始录音
+     * 点击录音按钮
      */
-    void startRecord();
-
-    /**
-     * 结束录音
-     */
-    void stopRecord();
+    void onRecordClick();
 
     /**
      * 删除录音文件
