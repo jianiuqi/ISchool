@@ -2,13 +2,17 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
 def AAVersion = '3.3.2'
 
+//加载签名配置的文件
+Properties props = new Properties()
+props.load(new FileInputStream(file("signing.properties")))
+
 android {
     signingConfigs {
         config {
-            keyAlias 'ischool_keystore'
-            keyPassword 'ibm_ischool_2017'
-            storeFile file('D:/jnq/tool/android-studio/workspace/ISchool/app/ischool.keystore')
-            storePassword 'ibm_ischool_2017'
+            keyAlias props['KEY_ALIAS']
+            keyPassword props['KEY_PASSWORD']
+            storeFile file(props['KEYSTORE_FILE'])
+            storePassword props['KEYSTORE_PASSWORD']
             v1SigningEnabled false
             v2SigningEnabled false
         }
@@ -19,8 +23,8 @@ android {
         applicationId "com.ibm.ischool"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 4
-        versionName "1.0.4"
+        versionCode 6
+        versionName "1.0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
