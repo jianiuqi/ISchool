@@ -115,6 +115,7 @@ public class CRLSpeechUtil {
 			String url = "ws://9.186.52.218:8082/voicetracking/api/decode";
 			final boolean interim = true;
 			final boolean vad = false;
+			final int nbest = 10;
 			try {
 				client = new WebSocketClient(new URI(url), new Draft_17()) {
 					@Override
@@ -125,7 +126,7 @@ public class CRLSpeechUtil {
 							e.printStackTrace();
 						}
 						this.send("{\"action\": \"start\", \"format\": \"wave\", \"interim_results\": " + interim
-								+ ", \"vad\": " + vad + "}");
+								+ ", \"vad\": " + vad + ", \"nbest\": " + nbest + "}");
 					}
 
 					@Override
