@@ -214,41 +214,16 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
      * @return
      */
     private SpannableStringBuilder nbestMatchRule(String content) {
-        //1.获取所有匹配结果的候选
+        //获取所有匹配结果的候选
         String[] bestResults = content.trim().split("\n");
-        //2.从候选中获取最大匹配的长度
+        //从候选中获取最大匹配的长度
         int bestMaxMatchSize = 0;
         int bestMaxPauseMatchSize = 0;
         for (int i = 0; i < bestResults.length; i++) {
             String[] words = bestResults[i].trim().split(" ");
-            String firstNeedMatchWord = mNeedMatchWords.get(0).replace(".", "").replace(",", "")
-                    .replace(":", "").replace("?", "").replace("|", "").toUpperCase();
-            //3.先获取待匹配的第一个单词在识别结果中的所有的index
-            List<Integer> firstMatchIndexes = new ArrayList<>();
-            for (int j = 0; j < words.length; j++) {
-                if (StringUtils.isEquals(words[j].replace(" ", ""), firstNeedMatchWord)) {
-                    firstMatchIndexes.add(j);
-                }
-            }
-            //4.查看每个index后有多少匹配的单词
-            int maxMatchSize = 0;
-            for (int k = 0; k < firstMatchIndexes.size(); k++) {
-                int index = firstMatchIndexes.get(k);
-                int maxMatchSizeTemp = 0;
-                int sizeCount = (words.length - index) > mNeedMatchWords.size()? mNeedMatchWords.size() : (words.length - index);
-                for (int m = 0; m < sizeCount; m++) {
-                    String needWord = mNeedMatchWords.get(m).replace(".", "").replace(",", "")
-                            .replace(":", "").replace("?", "").replace("|", "").toUpperCase();
-                    String recogWord = words[m + index].replace(" ", "");
-                    if (StringUtils.isEquals(recogWord, needWord)){
-                        maxMatchSizeTemp ++;
-                    }
-                }
-                if (maxMatchSizeTemp > maxMatchSize) {
-                    maxMatchSize = maxMatchSizeTemp;
-                }
-            }
-            //5.判断正确的单词个数和停顿长度匹配度
+            //查找识别结果中最大匹配的单词个数
+            int maxMatchSize = getMaxMatchNum(0, 0, mNeedMatchWords, words, 0);
+            //判断正确的单词个数和停顿长度匹配度
             int needPauseWordLength = 0;
             int maxPauseMatchSize = 0;
             int maxMatchSizeCopy = 0;
@@ -263,17 +238,17 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
                 maxMatchSizeCopy = needPauseWordLength;
             }
             maxMatchSize = maxMatchSizeCopy;
-            //6.记录best结果
+            //记录best结果
             if (maxMatchSize > bestMaxMatchSize) {
                 bestMaxMatchSize = maxMatchSize;
                 bestMaxPauseMatchSize = maxPauseMatchSize;
             }
         }
-        //7.移除待匹配的断句
+        //移除待匹配的断句
         for (int i = 0; i < bestMaxPauseMatchSize; i++) {
             mNeedPauses.remove(0);
         }
-        //8.操作正确的List和待匹配的List
+        //操作正确的List和待匹配的List
         for (int i = 0; i < bestMaxMatchSize; i++) {
             mRightWords.add(mNeedMatchWords.get(i));
         }
@@ -313,48 +288,22 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
      * @return
      */
     private SpannableStringBuilder nbestTempMatchRule(String content){
-        //1.获取所有匹配结果的候选
+        //获取所有匹配结果的候选
         String[] bestResults = content.trim().split("\n");
         int bestMaxMatchSize = 0;
         for (int i = 0; i < bestResults.length; i++) {
             String[] tempWords = bestResults[i].trim().split(" ");
-            String firstNeedMatchWord = mNeedMatchWords.get(0).replace(".", "").replace(",", "")
-                    .replace(":", "").replace("?", "").replace("|", "").toUpperCase();
-            //2.先获取待匹配的第一个单词在识别结果中的所有的index
-            List<Integer> firstMatchIndexes = new ArrayList<>();
-            for (int j = 0; j < tempWords.length; j++) {
-                if (StringUtils.isEquals(tempWords[j].replace(" ", ""), firstNeedMatchWord)) {
-                    firstMatchIndexes.add(j);
-                }
-            }
-            //2.查看每个index后有多少匹配的单词
-            int maxMatchSize = 0;
-            for (int k = 0; k < firstMatchIndexes.size(); k++) {
-                int index = firstMatchIndexes.get(k);
-                int maxMatchSizeTemp = 0;
-                int sizeCount = (tempWords.length - index) > mNeedMatchWords.size()? mNeedMatchWords.size() : (tempWords.length - index);
-                for (int m = 0; m < sizeCount; m++) {
-                    String needWord = mNeedMatchWords.get(m).replace(".", "").replace(",", "")
-                            .replace(":", "").replace("?", "").replace("|", "").toUpperCase();
-                    String recogWord = tempWords[m + index].replace(" ", "");
-                    if (StringUtils.isEquals(recogWord, needWord)){
-                        maxMatchSizeTemp ++;
-                    }
-                }
-                if (maxMatchSizeTemp > maxMatchSize) {
-                    maxMatchSize = maxMatchSizeTemp;
-                }
-            }
+            int maxMatchSize = getMaxMatchNum(0, 0, mNeedMatchWords, tempWords, 0);
             if (maxMatchSize > bestMaxMatchSize) {
                 bestMaxMatchSize = maxMatchSize;
             }
         }
         List<String> tempRightWords = new ArrayList<>();
-        //3.操作正确的List和待匹配的List
+        //操作正确的List和待匹配的List
         for (int i = 0; i < bestMaxMatchSize; i++) {
             tempRightWords.add(mNeedMatchWords.get(i));
         }
-        // 拼接句子
+        //拼接句子
         final SpannableStringBuilder builder = new SpannableStringBuilder();
         //对的单词
         for (int i = 0; i < mRightWords.size(); i++) {
@@ -403,21 +352,22 @@ public class TrackingPresenterImpl implements ITrackingPresenter{
      * @param matchNum
      * @return
      */
-    private int getMaxMatchNum(int needPos, int resultPos, String[] needWords, String[] resultWords, int matchNum){
-        for (int i = needPos; i < needWords.length; i++) {
-            String needMatch = needWords[i];
+    private int getMaxMatchNum(int needPos, int resultPos, List<String> needWords, String[] resultWords, int matchNum){
+        for (int i = needPos; i < needWords.size(); i++) {
+            String needMatch = needWords.get(i).replace(".", "").replace(",", "")
+                    .replace(":", "").replace("?", "").replace("|", "").toUpperCase();
             for (int j = resultPos; j < resultWords.length; j++) {
-                String resultWord = resultWords[j];
-                if (needMatch.equals(resultWord)) {
+                String resultWord = resultWords[j].replace(" ", "");
+                if (StringUtils.isEquals(resultWord, needMatch)) {
                     matchNum = i + 1;
-                    if (i < needWords.length-1 && j < resultWords.length - 1) {
+                    if (i < needWords.size()-1 && j < resultWords.length - 1) {
                         return getMaxMatchNum(i + 1, j + 1, needWords, resultWords, matchNum);
                     }else {
                         return matchNum;
                     }
                 }else {
                     if (j == resultWords.length-1) {
-                        i = needWords.length;
+                        i = needWords.size();
                         break;
                     }
                 }

@@ -115,7 +115,7 @@ public class CRLSpeechUtil {
 			String url = "ws://9.186.52.218:8082/voicetracking/api/decode";
 			final boolean interim = true;
 			final boolean vad = false;
-			final int nbest = 10;
+			final int nbest = 20;
 			try {
 				client = new WebSocketClient(new URI(url), new Draft_17()) {
 					@Override

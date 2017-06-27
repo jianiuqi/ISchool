@@ -162,8 +162,8 @@ public class RecordUtil {
 
 			try {
 				StringBuffer st = new StringBuffer();
-//				st.append("http://9.186.52.218:8082/assessment/api/en?s=");
-				st.append("http://36.110.51.141:8082/assessment/api/en?s=");
+				st.append("http://9.186.52.218:8082/assessment/api/en?s=");
+//				st.append("http://36.110.51.141:8082/assessment/api/en?s=");
 				st.append(URLEncoder.encode(ref, "utf-8"));
 
 				URL postUrl = new URL(st.toString());

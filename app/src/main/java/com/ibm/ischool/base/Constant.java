@@ -6,7 +6,7 @@ public class Constant {
 
 	public static final String APP_FOLDER_NAME = "ISchool";
 	
-	public static final String BASE_SERVER_URL = "http://60.205.178.158/ischool_server";
+	public static final String BASE_SERVER_URL = "http://9.186.52.178:8080/ischool_server";
 	
 	/**
 	 * 合格分数
